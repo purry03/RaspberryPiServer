@@ -1,0 +1,52 @@
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+    ports:
+      - 80:80
+      - 443:443
+  gitbucket:
+    image: gitbucket:latest
+    container_name: gitbucket
+    restart: always
+    volumes:
+      - ./gitbucket/.gitbucket:/root/.gitbucket
+    ports:
+      - 8080:8080
+  code-server:
+    image: code-server:latest
+    container_name: code-server
+    restart: always
+    volumes:
+      - ./code-server/.config:/root/.config
+      - ./code-server/.local:/rool/.local
+      - ~/dev:/root/dev
+    ports:
+      - 8081:8080
+    db:
+        image: mysql:5.7
+        volumes:
+            - database:/var/lib/mysql
+            - ./config/start.sql:/docker-entrypoint-initdb.d/start.sql
+            - ./config/eve_universe.sql:/docker-entrypoint-initdb.d/eve_universe.sql
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: SSWORD}
+    pathfinder:
+        build:
+           context: ./pathfinder
+           dockerfile: Dockerfile
+        restart: always
+        image: kryptedgaming/pathfinder:latest
+        env_file: .env
+        ports:
+            - "8000:80"
+            - "8020:8020" 
+
+volumes:
+    database: {}

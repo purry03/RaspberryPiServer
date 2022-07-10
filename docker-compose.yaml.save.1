@@ -1,0 +1,30 @@
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: alway      dockerfile: nginx
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+    ports:
+      - 80:80
+      - 443:443
+  gitbucket:
+    image: gitbucket:latest
+    container_name: gitbucket
+    restart: always
+    volumes:
+      - ./gitbucket/.gitbucket:/root/.gitbucket
+    ports:
+      - 8080:8080
+  code-server:
+    image: code-server:latest
+    container_name: code-server
+    restart: always
+    volumes:
+      - ./code-server/.config:/root/.config
+      - ./code-server/.local:/rool/.local
+      - ~/dev:/root/dev
+    ports:
+      - 8081:8080

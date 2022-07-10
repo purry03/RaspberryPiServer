@@ -1,0 +1,9 @@
+
+services:
+ gitbucket:
+		image: gitbucket:latest
+		container_name: gitbucket
+		volumes:
+			- gitbucket/.gitbucket:/root/.gitbucket
+		ports:
+			- 8080:8080
